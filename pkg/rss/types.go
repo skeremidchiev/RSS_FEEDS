@@ -34,7 +34,6 @@ func (ris *rssItems) getItems() []RssItem {
 	ris.RLock()
 	defer ris.RUnlock()
 	return ris.items
-
 }
 
 // The addFromRss importing all items from rss feed to rssItems in a thread safe manner
@@ -106,9 +105,14 @@ type customTime struct {
 func (c *customTime) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	var v string
 	d.DecodeElement(&v, &start)
-	parse, err := time.Parse(time.RFC1123/*Z*/, v)
+
+	// Time format is extremly tricky
+	parse, err := time.Parse(time.RFC1123, v)
 	if err != nil {
-		return err
+		parse, err = time.Parse(time.RFC1123Z, v)
+		if err != nil {
+			return err
+		}
 	}
 
 	*c = customTime{parse}

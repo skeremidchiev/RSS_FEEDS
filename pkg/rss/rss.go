@@ -21,10 +21,6 @@ func Parse(urls []string) []RssItem {
 
 	wg.Wait()
 
-	// TODO: remove
-	fmt.Printf("ITEMS: %+v\n", items)
-	fmt.Println(items.size())
-
 	return items.getItems()
 }
 
@@ -35,14 +31,14 @@ func readFeed(_url string, ris *rssItems, wg *sync.WaitGroup) {
 	// check if url valid
 	u, err := url.ParseRequestURI(_url)
 	if err != nil {
-		fmt.Println("URL: %s \t Error: %s", _url, err.Error())
+		fmt.Printf("URL: %s \t Error: %s\n", _url, err.Error())
 		return
 	}
 
 	// get response
 	resp, err := http.Get(u.String())
 	if err != nil {
-		fmt.Println("URL: %s \t Error: %s", _url, err.Error())
+		fmt.Printf("URL: %s \t Error: %s\n", _url, err.Error())
 		return
 	}
 	defer resp.Body.Close()
